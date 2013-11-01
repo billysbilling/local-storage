@@ -2,13 +2,7 @@
   "name": "local-storage",
   "version": "0.0.1",
   "homepage": "https://github.com/billysbilling/local-storage",
-  "main": "src/js/REPLACE-ME.js",
-  "billy-builder": {
-    "include": [
-      "src/js",
-      "src/templates"
-    ]
-  },
+  "main": "src/local-storage.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -19,6 +13,6 @@
     "package.json"
   ],
   "dependencies": {
-    "ember": "billysbilling/bower-ember#master"
+    "jquery-plugins": "billysbilling/bower-jquery-plugins#master"
   }
 }
