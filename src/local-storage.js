@@ -27,7 +27,7 @@ function storage(key, value) {
             if (supportsLocalStorage) {
                 localStorage[key] = value;
             } else {
-                $.cookie(key, value, {path: '/'});
+                $.cookie(key, value, {path: '/', expires: 365});
             }
         }
     }
