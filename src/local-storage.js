@@ -1,14 +1,41 @@
-var supportsLocalStorage = !!window.localStorage;
+require('jquery-plugins');
+
+var supportsLocalStorage,
+    testPrefix,
+    testPrefixRegex;
+
+resetSupportsLocalStorage();
+
+resetTestPrefix();
 
 module.exports = storage;
+
+module.exports.originalLocalStorage = localStorage;
+
 module.exports.remove = remove;
+
+module.exports.clear = clear;
+
+module.exports.setSupportsLocalStorage = setSupportsLocalStorage;
+
+module.exports.resetSupportsLocalStorage = resetSupportsLocalStorage;
+
+module.exports.setTestPrefix = setTestPrefix;
+
+module.exports.resetTestPrefix = resetTestPrefix;
+
 module.exports.testTeardown = testTeardown;
+
 
 function storage(key, value) {
     if (typeof key === 'undefined') {
         //Get all
         if (supportsLocalStorage) {
-            return localStorage;
+            var all = {};
+            for (var k in localStorage) {
+                all[k] = localStorage[k];
+            }
+            return all;
         } else {
             return $.cookie();
         }
@@ -29,13 +56,14 @@ function storage(key, value) {
             } else {
                 $.cookie(key, value, {path: '/', expires: 365});
             }
+            return value;
         }
     }
 }
 
 function remove(key) {
     key = formatKey(key);
-    
+
     if (supportsLocalStorage) {
         delete localStorage[key];
     } else {
@@ -43,12 +71,40 @@ function remove(key) {
     }
 }
 
+function clear() {
+    if (supportsLocalStorage) {
+        localStorage.clear();
+    } else {
+        var all = $.cookie();
+        for (var k in all) {
+            $.removeCookie(k);
+        }
+    }
+}
+
+function setSupportsLocalStorage(s) {
+    supportsLocalStorage = s;
+}
+
+function resetSupportsLocalStorage() {
+    supportsLocalStorage = !!window.localStorage;
+}
+
+function setTestPrefix(p) {
+    testPrefix = p;
+    testPrefixRegex = new RegExp('^'+testPrefix+'(.+)$');
+}
+
+function resetTestPrefix() {
+    setTestPrefix('__test__');
+}
+
 function testTeardown() {
     var all = storage();
     for (var k in all) {
         if (!all.hasOwnProperty(k)) continue;
         
-        var match = k.match(/^__test__(.+)$/);
+        var match = k.match(testPrefixRegex);
         if (match) {
             remove(match[1]);
         }
@@ -57,7 +113,7 @@ function testTeardown() {
 
 function formatKey(key) {
     if (ENV.isTest) {
-        key = '__test__'+key;
+        key = testPrefix+key;
     }
     return key;
 }
