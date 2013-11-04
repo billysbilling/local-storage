@@ -1,8 +1,8 @@
 {
-  "name": "local-storage",
+  "name": "storage",
   "version": "0.0.1",
-  "homepage": "https://github.com/billysbilling/local-storage",
-  "main": "src/local-storage.js",
+  "homepage": "https://github.com/billysbilling/storage",
+  "main": "src/storage.js",
   "license": "MIT",
   "ignore": [
     "**/.*",

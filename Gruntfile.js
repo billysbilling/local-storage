@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         billy_builder: {
-            title: 'local-storage'
+            title: 'storage'
         }
     });
 

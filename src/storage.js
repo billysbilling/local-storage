@@ -10,8 +10,6 @@ resetTestPrefix();
 
 module.exports = storage;
 
-module.exports.originalLocalStorage = localStorage;
-
 module.exports.remove = remove;
 
 module.exports.clear = clear;

@@ -1,81 +1,81 @@
-var localStorage = require('../src/local-storage');
+var storage = require('../src/storage');
 
 [false, true].forEach(function(supportsLocalStorage) {
 
-    QUnit.module(supportsLocalStorage ? 'local-storage' : 'cookie', {
+    QUnit.module(supportsLocalStorage ? 'localStorage' : 'cookie', {
         setup: function() {
-            localStorage.setSupportsLocalStorage(supportsLocalStorage);
-            localStorage.setTestPrefix('');
+            storage.setSupportsLocalStorage(supportsLocalStorage);
+            storage.setTestPrefix('');
         },
         teardown: function() {
-            localStorage.clear();
-            localStorage.resetTestPrefix();
-            localStorage.resetSupportsLocalStorage();
+            storage.clear();
+            storage.resetTestPrefix();
+            storage.resetSupportsLocalStorage();
         }
     });
     
     test('Set returns the value', function() {
-        equal(localStorage('mykey', 'hello'), 'hello');
+        equal(storage('mykey', 'hello'), 'hello');
     });
     
     test('Get can read what was set', function() {
-        localStorage('mykey', 'hello')
-        equal(localStorage('mykey'), 'hello');
+        storage('mykey', 'hello')
+        equal(storage('mykey'), 'hello');
     });
     
     test('Get all when empty', function() {
-        deepEqual(localStorage(), {});
+        deepEqual(storage(), {});
     });
     
     test('Get all with contents', function() {
-        localStorage('a', 'Jane');
-        localStorage('b', 'John');
-        deepEqual(localStorage(), {a: 'Jane', b: 'John'});
+        storage('a', 'Jane');
+        storage('b', 'John');
+        deepEqual(storage(), {a: 'Jane', b: 'John'});
     });
     
     test('String is left as a string', function() {
-        localStorage('a', 'John');
-        equal(localStorage('a'), 'John');
+        storage('a', 'John');
+        equal(storage('a'), 'John');
     });
     
     test('Number is converted to string', function() {
-        localStorage('a', 123);
-        equal(localStorage('a'), '123');
-        
-        localStorage('a', 123.456);
-        equal(localStorage('a'), '123.456');
+        storage('a', 123);
+        equal(storage('a'), '123');
+
+        storage('a', 123.456);
+        equal(storage('a'), '123.456');
     });
     
     test('Boolean is converted to string', function() {
-        localStorage('a', true);
-        equal(localStorage('a'), 'true');
-    
-        localStorage('a', false);
-        equal(localStorage('a'), 'false');
+        storage('a', true);
+        equal(storage('a'), 'true');
+
+        storage('a', false);
+        equal(storage('a'), 'false');
     });
     
     test('remove', function() {
-        localStorage('a', 'John');
-        localStorage.remove('a');
-        equal(localStorage('a'), undefined);
+        storage('a', 'John');
+        storage.remove('a');
+        equal(storage('a'), undefined);
     });
     
     test('clear', function() {
-        localStorage('a', 'John');
-        localStorage('b', 'Jane');
-        localStorage.clear();
-        deepEqual(localStorage(), {});
-        equal(localStorage('a'), undefined);
-        equal(localStorage('b'), undefined);
+        storage('a', 'John');
+        storage('b', 'Jane');
+        storage.clear();
+        deepEqual(storage(), {});
+        equal(storage('a'), undefined);
+        equal(storage('b'), undefined);
     });
     
     test('testTeardown', function() {
-        localStorage.resetTestPrefix();
-        localStorage('a', 'John');
-        localStorage('b', 'Jane');
-        localStorage.clear();
-        deepEqual(localStorage(), {});
-        equal(localStorage('a'), undefined);
-        equal(localStorage('b'), undefined);
+        storage.resetTestPrefix();
+        storage('a', 'John');
+        storage('b', 'Jane');
+        storage.clear();
+        deepEqual(storage(), {});
+        equal(storage('a'), undefined);
+        equal(storage('b'), undefined);
     });
 });
