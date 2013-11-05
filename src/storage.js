@@ -1,12 +1,9 @@
 require('jquery-plugins');
 
 var supportsLocalStorage,
-    testPrefix,
-    testPrefixRegex;
+    namespace = '';
 
 resetSupportsLocalStorage();
-
-resetTestPrefix();
 
 module.exports = storage;
 
@@ -18,15 +15,11 @@ module.exports.setSupportsLocalStorage = setSupportsLocalStorage;
 
 module.exports.resetSupportsLocalStorage = resetSupportsLocalStorage;
 
-module.exports.setTestPrefix = setTestPrefix;
-
-module.exports.resetTestPrefix = resetTestPrefix;
-
-module.exports.testTeardown = testTeardown;
+module.exports.setNamespace = setNamespace;
 
 
 function storage(key, value) {
-    if (typeof key === 'undefined') {
+    if (typeof key != null) {
         //Get all
         if (supportsLocalStorage) {
             var all = {};
@@ -70,12 +63,11 @@ function remove(key) {
 }
 
 function clear() {
-    if (supportsLocalStorage) {
-        localStorage.clear();
-    } else {
-        var all = $.cookie();
-        for (var k in all) {
-            $.removeCookie(k);
+    var all = storage();
+    for (var k in all) {
+        var match = k.match('^'+namespace+'(.+)$');
+        if (namespace == null || match == null) {
+            remove(key)
         }
     }
 }
@@ -88,30 +80,13 @@ function resetSupportsLocalStorage() {
     supportsLocalStorage = !!window.localStorage;
 }
 
-function setTestPrefix(p) {
-    testPrefix = p;
-    testPrefixRegex = new RegExp('^'+testPrefix+'(.+)$');
-}
-
-function resetTestPrefix() {
-    setTestPrefix('__test__');
-}
-
-function testTeardown() {
-    var all = storage();
-    for (var k in all) {
-        if (!all.hasOwnProperty(k)) continue;
-        
-        var match = k.match(testPrefixRegex);
-        if (match) {
-            remove(match[1]);
-        }
-    }
+function setNamespace(p) {
+    namespace = p + '_';
 }
 
 function formatKey(key) {
     if (ENV.isTest) {
-        key = testPrefix+key;
+        key = namespace+key;
     }
     return key;
 }

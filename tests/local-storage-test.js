@@ -5,39 +5,39 @@ var storage = require('../src/storage');
     QUnit.module(supportsLocalStorage ? 'localStorage' : 'cookie', {
         setup: function() {
             storage.setSupportsLocalStorage(supportsLocalStorage);
-            storage.setTestPrefix('');
+            storage.setTestPrefix('test');
         },
         teardown: function() {
             storage.clear();
-            storage.resetTestPrefix();
+            storage.setTestPrefix('');
             storage.resetSupportsLocalStorage();
         }
     });
-    
+
     test('Set returns the value', function() {
         equal(storage('mykey', 'hello'), 'hello');
     });
-    
+
     test('Get can read what was set', function() {
         storage('mykey', 'hello')
         equal(storage('mykey'), 'hello');
     });
-    
+
     test('Get all when empty', function() {
         deepEqual(storage(), {});
     });
-    
+
     test('Get all with contents', function() {
         storage('a', 'Jane');
         storage('b', 'John');
         deepEqual(storage(), {a: 'Jane', b: 'John'});
     });
-    
+
     test('String is left as a string', function() {
         storage('a', 'John');
         equal(storage('a'), 'John');
     });
-    
+
     test('Number is converted to string', function() {
         storage('a', 123);
         equal(storage('a'), '123');
@@ -45,7 +45,7 @@ var storage = require('../src/storage');
         storage('a', 123.456);
         equal(storage('a'), '123.456');
     });
-    
+
     test('Boolean is converted to string', function() {
         storage('a', true);
         equal(storage('a'), 'true');
@@ -53,13 +53,13 @@ var storage = require('../src/storage');
         storage('a', false);
         equal(storage('a'), 'false');
     });
-    
+
     test('remove', function() {
         storage('a', 'John');
         storage.remove('a');
         equal(storage('a'), undefined);
     });
-    
+
     test('clear', function() {
         storage('a', 'John');
         storage('b', 'Jane');
@@ -68,14 +68,14 @@ var storage = require('../src/storage');
         equal(storage('a'), undefined);
         equal(storage('b'), undefined);
     });
-    
-    test('testTeardown', function() {
-        storage.resetTestPrefix();
+
+    test('namespaced clear', function() {
         storage('a', 'John');
+        storage.setNamespace('bob')
         storage('b', 'Jane');
         storage.clear();
         deepEqual(storage(), {});
-        equal(storage('a'), undefined);
+        notEqual(storage('a'), undefined);
         equal(storage('b'), undefined);
     });
 });
