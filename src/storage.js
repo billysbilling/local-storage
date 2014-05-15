@@ -85,7 +85,18 @@ function setSupportsLocalStorage(s) {
 }
 
 function resetSupportsLocalStorage() {
-    supportsLocalStorage = !!window.localStorage;
+    var testKey = 'local_storage_test_key', storage = window.localStorage;
+    if (storage) {
+        try {
+            storage.setItem(testKey, '1');
+            storage.removeItem(testKey);
+            supportsLocalStorage = true;
+        } catch (err) {
+            supportsLocalStorage = false;
+        }
+    } else {
+        supportsLocalStorage = false;
+    }
 }
 
 function setTestPrefix(p) {
@@ -101,7 +112,7 @@ function testTeardown() {
     var all = storage();
     for (var k in all) {
         if (!all.hasOwnProperty(k)) continue;
-        
+
         var match = k.match(testPrefixRegex);
         if (match) {
             remove(match[1]);
