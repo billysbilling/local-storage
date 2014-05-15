@@ -1,6 +1,6 @@
 {
   "name": "storage",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/billysbilling/storage",
   "main": "src/storage.js",
   "license": "MIT",
